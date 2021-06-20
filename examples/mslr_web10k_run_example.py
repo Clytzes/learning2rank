@@ -1,4 +1,4 @@
-from models import BaseRankingModel
+from models import DNNRankModel
 from utils import *
 
 
@@ -28,11 +28,11 @@ folds = ['Fold1', 'Fold2', 'Fold3', 'Fold4', 'Fold5']
 all_results_df = pd.DataFrame({})
 all_results_ls = []
 
-# for split_fold in folds:
-#     for cat in ['train','vali','test']:
-#         train_path = f'data/MSLR-WEB10K/{split_fold}/{cat}.txt'
-#         data = load_libsvm_convert_to_dataframe(train_path,num_features=136)
-#         data.to_csv(f'data/MSLR-WEB10K/{split_fold}/{cat}.csv',index=False)
+for split_fold in folds:
+    for cat in ['train','vali','test']:
+        train_path = f'data/MSLR-WEB10K/{split_fold}/{cat}.txt'
+        data = load_libsvm_convert_to_dataframe(train_path,num_features=136)
+        data.to_csv(f'data/MSLR-WEB10K/{split_fold}/{cat}.csv',index=False)
 
 for split_fold in folds:
     train_path = f'data/MSLR-WEB10K/{split_fold}/train.csv'
@@ -52,10 +52,6 @@ for split_fold in folds:
 
     for group_size in group_size_list:
         for i, loss in enumerate(losses):
-            if loss == 'pairwise_hinge_loss':
-                continue
-            if loss == 'pairwise_logistic_loss':
-                continue
             for j, secondary_loss in enumerate(secondary_losses):
                 for lambda_ndcg in lambda_ndcg_list:
                     modelname = 'dnn' + '_' + f'loss{i + 1}' + '_' + (
@@ -77,7 +73,7 @@ for split_fold in folds:
                                   emb_dims=8
                                   )
 
-                    model = BaseRankingModel(params)
+                    model = DNNRankModel(params)
                     train_result, evaluate_result = tain_predict_output()
 
                     train_mctric = {}
@@ -105,4 +101,4 @@ for split_fold in folds:
                     _all_results = pd.DataFrame(all_results)
                     all_results_df = all_results_df.append(_all_results)
 
-all_results_df.to_csv(f'output/MSLR/report/web_results_{modelname}.csv')
+all_results_df.to_csv(f'output/MSLR/report/MSLR_{modelname}.csv')

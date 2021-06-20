@@ -1,7 +1,9 @@
 # Default ignored files
+/.idea/
 /venv/
 /config/
 /data/
+/output/
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
